@@ -3,240 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 청년센터 양양 단합 비밀미션</title>
+    <title>🕵️ 청년센터 단합 개인 비밀미션! </title>
     <style>
-        /* 기본 설정 */
-        :root {
-            --gold: #c5a059;
-            --deep-blue: #0f0c29;
-            --mystic-purple: #302b63;
-            --cream: #f3f0df;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            background-color: #f0f8ff;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 2.5rem 1rem 4rem;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem 1.5rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 86, 179, 0.1);
+            text-align: center;
+            max-width: 460px;
+            width: 100%;
+            border: 4px solid #ffcc00;
+        }
+
+        h1 { color: #0056b3; font-size: 1.5rem; margin-bottom: 0.3rem; }
+        .subtitle { font-size: 0.88rem; color: #888; margin-bottom: 1.5rem; }
+
+        /* 안내 문구 */
+        .guide {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 1.25rem;
+            min-height: 20px;
+            transition: color 0.3s;
+        }
+        .guide.active { color: #0056b3; font-weight: 600; }
+
+        /* ── 카드 영역 ── */
+        /* 뽑기 전 / 선택 완료 후: 가운데 카드 1장 */
+        .cards-single {
+            display: flex;
             justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Pretendard', sans-serif;
-            color: var(--cream);
-            overflow-x: hidden;
+            margin-bottom: 1.25rem;
         }
 
-        h1 {
-            font-size: 1.8rem;
-            color: var(--gold);
-            text-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
-            margin-bottom: 5px;
+        /* 2장 고르는 중 */
+        .cards-row {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin-bottom: 1.25rem;
         }
 
-        .subtitle {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-bottom: 30px;
+        .card-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            max-width: 190px;
         }
 
-        /* 카드 컨테이너 (3D 환경) */
-        .card-container {
-            perspective: 1000px;
-            width: 300px;
-            height: 480px;
+        .card-scene {
+            perspective: 900px;
+            width: 100%;
+            height: 210px;
             cursor: pointer;
-            position: relative;
         }
 
-        /* 실제 카드 */
-        .card {
+        /* 선택 완료 후 가운데 단독 카드는 넓게 */
+        .card-scene.solo {
+            width: 220px;
+            height: 210px;
+            cursor: default;
+        }
+
+        .card-inner {
             width: 100%;
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            border-radius: 20px;
+            transition: transform 0.55s cubic-bezier(.4,0,.2,1);
         }
+        .card-inner.flipped { transform: rotateY(180deg); }
 
-        /* 카드가 뒤집혔을 때의 상태 */
-        .card.is-flipped {
-            transform: rotateY(180deg);
-        }
-
-        /* 카드 앞/뒷면 공통 */
         .card-face {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             backface-visibility: hidden;
-            border-radius: 20px;
-            border: 5px solid var(--gold);
+            border-radius: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 1.2rem 1rem;
+            gap: 0.5rem;
         }
 
-        /* 카드 앞면 (닫힌 상태 - 타로 문양) */
-        .card-front {
+        /* 뒷면 */
+        .card-back {
             background: #1a1a2e;
+            border: 3px double #c5a059;
             background-image: 
                 radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.1) 0%, transparent 80%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l3 27 27 3-27 3-3 27-3-27-27-3 27-3z' fill='%23c5a059' fill-opacity='0.1'/%3E%3C/svg%3E");
+                url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 0l2 13 13 2-13 2-2 13-2-13-13-2 13-2z' fill='%23c5a059' fill-opacity='0.1'/%3E%3C/svg%3E");       
+        }
+        .card-back-emoji { font-size: 30px; margin-bottom: 5px; filter: drop-shadow(0 0 5px #c5a059); }
+        .card-back-label { font-size: 10px; color: #c5a059; font-weight: bold; letter-spacing: 1px; }
+
+        .card-scene:hover .card-back {
+            border-color: #ffb300;
+            background: #fff9d6;
+        }
+        .card-scene.solo:hover .card-back {
+            border-color: #ffcc00;
+            background: #fffbe6;
         }
 
-        .card-front::after {
-            content: "SECRET\nMISSION";
-            white-space: pre;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--gold);
-            letter-spacing: 5px;
-            border: 1px solid var(--gold);
-            padding: 20px;
+        .card-back-emoji {
+            font-size: 40px;
+            animation: float 2.5s ease-in-out infinite;
         }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+        .card-back-label { font-size: 13px; color: #ccc; margin-top: 4px; }
 
-        /* 카드 뒷면 (미션 공개 상태) */
-        .card-back {
-            background: var(--cream);
-            color: #1a1a2e;
+        /* 앞면 */
+        .card-front {
+            background: #fdfaf0;
+            border: 3px solid #c5a059;
             transform: rotateY(180deg);
+        }
+        .card-front.selected {
+            border-color: #0056b3;
+            background: #eef6ff;
+            box-shadow: 0 0 0 3px rgba(0,86,179,0.15);
         }
 
         .mission-cat {
-            font-size: 0.8rem;
+            font-size: 0.72rem;
+            font-weight: 700;
             color: #8b733a;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #8b733a;
-            padding-bottom: 5px;
+            border: 1px solid #c5a059;
+            background: rgba(255,153,0,0.12);
+            border-radius: 100px;
+            padding: 3px 10px;
+            margin-bottom: 10px;
         }
-
-        .mission-text {
-            font-size: 1.3rem;
-            font-weight: 800;
-            line-height: 1.6;
+        .mission-text-card {
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.55;
             word-break: keep-all;
+            text-align: center;
         }
 
-        /* 조작 버튼 */
-        .controls {
-            margin-top: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 300px;
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 1rem;
-            font-weight: bold;
-            border: 2px solid var(--gold);
-            background: transparent;
-            color: var(--gold);
-            border-radius: 50px;
+        /* 선택 버튼 */
+        .pick-btn {
+            display: none;
+            padding: 7px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 100px;
+            border: none;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        button:hover {
-            background: var(--gold);
+            background: #0056b3;
             color: white;
-            box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
         }
+        .pick-btn:hover { background: #0047a0; }
+        .pick-btn:active { transform: scale(0.95); }
 
-        button:active {
-            transform: scale(0.95);
+        /* 메인 버튼 */
+        .btn-main {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            background-color: #ffcc00;
+            color: #333;
+            transition: transform 0.15s, background-color 0.2s;
+            margin-bottom: 1rem;
         }
+        .btn-main:hover { background-color: #ffb300; }
+        .btn-main:active { transform: scale(0.95); }
+        .btn-main:disabled { background: #eee; color: #bbb; cursor: not-allowed; transform: none; }
+
+        .footer-text { font-size: 0.75rem; color: #ccc; }
+
+        /* 선택 완료 페이드인 */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up { animation: fadeInUp 0.45s ease both; }
     </style>
 </head>
 <body>
+<div class="container">
+    <h1>🕵️‍♂️ 청년센터 단합 개인 비밀미션! </h1>
+    <p class="subtitle">양양 단합대회 — 질서 안의 자유!</p>
 
-    <h1>🕵️‍♂️ 신학부 비밀 미션</h1>
-    <p class="subtitle">미스틱 타로 에디션</p>
+    <p class="guide" id="guide">버튼을 눌러 미션 카드 2장을 뽑으세요!</p>
 
-    <div class="card-container" onclick="flipCard()">
-        <div class="card" id="card">
-            <div class="card-face card-front"></div>
-            <div class="card-face card-back">
-                <div id="m-cat" class="mission-cat">운명을 뽑아주세요</div>
-                <div id="m-text" class="mission-text">중앙 버튼을 눌러<br>운명을 확인하세요.</div>
+    <!-- 카드 영역: JS가 innerHTML로 교체 -->
+    <div id="cardArea">
+        <!-- 초기 대기 카드 (1장) -->
+        <div class="cards-single">
+            <div class="card-scene solo">
+                <div class="card-inner">
+                    <div class="card-face card-back">
+                        <span class="card-back-emoji">🎴</span>
+                        <p class="card-back-label">미션 뽑기</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="controls">
-        <button onclick="drawNewMission()">새로운 운명 뽑기 🎲</button>
-    </div>
+    <button class="btn-main" id="drawBtn" onclick="drawMissions()">🎲 미션 2장 뽑기</button>
 
-    <script>
-        const missions = [
-            { cat: "유형 1: 하늘에 촥! 붙기!", text: "담당 강사님(주강사님, 총무님)과 함께 손가락 하트 만들고 셀카 찍기" },
-            { cat: "유형 1: 하늘에 촥! 붙기!", text: "총무님께 '오늘따라 참 귀여우시네요' 혹은 '귀엽다'는 말 듣기" },
-            { cat: "유형 1: 하늘에 촥! 붙기!", text: "담당 강사님(주강사님)과 기분 좋게 '하이파이브' 2번 하기" },
-            { cat: "유형 1: 하늘에 촥! 붙기!", text: "총무님과 나란히 서서 팔짱끼고 사진 찍기" },
-            { cat: "유형 2: 사명자 친밀도 UP", text: "다른 차량 사명자에게 전화를 걸어 '사랑합니다, 연합합시다!' 외치고 끊기" },
-            { cat: "유형 2: 사명자 친밀도 UP", text: "오늘 파란색(또는 특정색) 아이템을 착용한 사명자 찾아 패션 칭찬하기" },
-            { cat: "유형 2: 사명자 친밀도 UP", text: "카페나 식당에서 다른 사명자의 빈 컵이나 쓰레기 3개 이상 대신 치워주기" },
-            { cat: "유형 2: 사명자 친밀도 UP", text: "누군가의 고민을 듣게 된다면 '제가 오늘 꼭 기도할게요'라고 답해주기" },
-            { cat: "유형 2: 사명자 친밀도 UP", text: "5명 이상 모인 곳에서 '우리는 하나!' 선창하고 후창 유도하기" },
-            { cat: "유형 2: 사명자 친밀도 UP", text: "오늘 하루 동안 서로 다른 사명자 5명에게 '엄지 척' 날려주기" },
-            { cat: "유형 2: 사명자 친밀도 UP", text: "상대방에게 'OO님은 진짜 센터의 기둥이세요'라고 말해주기" },
-            { cat: "유형 3: 텐션 UP! 웃음 유발", text: "바다를 향해 '양양아! 내가 왔다!' 라고 크게 외치기 (최소 3명 동반)" },
-            { cat: "유형 3: 텐션 UP! 웃음 유발", text: "사진 찍어주는 척하면서 내 얼굴 셀카 3장 몰래 찍어두기" },
-            { cat: "유형 3: 텐션 UP! 웃음 유발", text: "5명 이상 모인 곳에서 갑자기 스쿼트 10개 하기" },
-            { cat: "유형 3: 텐션 UP! 웃음 유발", text: "하늘을 가리키며 '와! 저 구름 모양 진짜 신기하다!'라고 말해 3명 이상 쳐다보게 만들기" },
-            { cat: "유형 3: 텐션 UP! 웃음 유발", text: "이동 중 차 안에서 무반주로 노래 한 구절 부르고 박수 유도하기" },
-            { cat: "유형 3: 텐션 UP! 웃음 유발", text: "사람들 앞에서 당당하게 '모델 워킹'으로 5미터 걷기" },
-            { cat: "유형 3: 텐션 UP! 웃음 유발", text: "카페 대화 중 갑자기 일어서서 1분간 미니 스피치하기 (주제 자유)" },
-            { cat: "유형 3: 텐션 UP! 웃음 유발", text: "주변 사람 중 한 명의 특징이나 말투 10초간 흉내 내기 (기분 좋게!)" },
-            { cat: "유형 3: 텐션 UP! 웃음 유발", text: "서피비치 백사장에 '사랑해요♡ 청년센터!' 크게 쓰고 인증샷 찍기" },
-            { cat: "유형 3: 텐션 UP! 웃음 유발", text: "카페 음악에 맞춰 아주 진지하고 우아하게 손가락 지휘 30초간 하기" },
-            { cat: "유형 4: 일상 소소 미션", text: "상대방과 가위바위보를 해서 연속 2번 이기기 (내기 금지!)" },
-            { cat: "유형 4: 일상 소소 미션", text: "누군가 영상 촬영을 할 때 뒤에서 몰래 '꽃받침' 포즈로 출연하기" },
-            { cat: "유형 4: 일상 소소 미션", text: "물병이나 소지품을 머리 위에 올리고 5초간 버티기 성공하기" },
-            { cat: "유형 4: 일상 소소 미션", text: "상대방에게 '와, 오늘 진짜 에너지 넘치시네요!'라는 말 듣기" },
-            { cat: "유형 4: 일상 소소 미션", text: "일명 '아재 개그' 하나 던져서 누군가를 피식 웃게 만들기" },
-            { cat: "유형 4: 일상 소소 미션", text: "서피비치 주변의 쓰레기 3개 주워서 쓰레기통에 버리기" }
-        ];
+    <p class="footer-text">※ 미션은 비밀입니다. 들키면 바다 입수! (농담)</p>
+</div>
 
-        const card = document.getElementById('card');
-        const mCat = document.getElementById('m-cat');
-        const mText = document.getElementById('m-text');
+<script>
+const missions = [
+    { cat: "유형 1: 하늘에 촥! 붙기!", text: "담당 강사님(주강사님, 총무님)과 함께 손가락 하트 만들고 셀카 찍기" },
+    { cat: "유형 1: 하늘에 촥! 붙기!", text: "총무님께 '오늘따라 참 귀여우시네요' 혹은 '귀엽다'는 말 듣기" },
+    { cat: "유형 1: 하늘에 촥! 붙기!", text: "담당 강사님(주강사님)과 기분 좋게 '하이파이브' 2번 하기" },
+    { cat: "유형 1: 하늘에 촥! 붙기!", text: "총무님께 나란히 서서 팔짱끼고 사진 찍기" },
+    { cat: "유형 2: 사명자 친밀도 UP", text: "다른 차량 사명자에게 전화를 걸어 '사랑합니다, 연합합시다!' 외치고 끊기" },
+    { cat: "유형 2: 사명자 친밀도 UP", text: "오늘 파란색(또는 특정색) 아이템을 착용한 사명자 찾아 패션 칭찬하기" },
+    { cat: "유형 2: 사명자 친밀도 UP", text: "카페나 식당에서 다른 사명자의 빈 컵이나 쓰레기 3개 이상 대신 치워주기" },
+    { cat: "유형 2: 사명자 친밀도 UP", text: "누군가의 고민을 듣게 된다면 '제가 오늘 꼭 기도할게요'라고 답해주기" },
+    { cat: "유형 2: 사명자 친밀도 UP", text: "5명 이상 모인 곳에서 '우리는 하나!' 선창하고 후창 유도하기" },
+    { cat: "유형 2: 사명자 친밀도 UP", text: "오늘 하루 동안 서로 다른 사명자 5명에게 '엄지 척' 날려주기" },
+    { cat: "유형 2: 사명자 친밀도 UP", text: "상대방에게 'OO님은 진짜 센터의 기둥이세요'라고 말해주기" },
+    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "바다를 향해 '양양아!! 내가 왔다!' 라고 크게 외치기 (최소 3명 동반)" },
+    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "사진 찍어주는 척하면서 내 얼굴 셀카 3장 몰래 찍어두기" },
+    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "5명 이상 모인 곳에서 갑자기 스쿼트 10개 하기" },
+    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "하늘을 가리키며 '와! 저 구름 모양 진짜 신기하다!'라고 말해 3명 이상 쳐다보게 만들기" },
+    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "이동 중 차 안에서 무반주로 노래 한 구절 부르고 박수 유도하기" },
+    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "사람들 앞에서 당당하게 '모델 워킹'으로 5미터 걷기" },
+    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "카페 대화 중 갑자기 일어서서 1분간 미니 스피치하기 (주제 자유)" },
+    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "주변 사람 중 한 명의 특징이나 말투 10초간 흉내 내기 (기분 좋게!)" },
+    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "카페 음악에 맞춰 아주 진지하고 우아하게 손가락 지휘 30초간 하기" },
+    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "서피비치 백사장에 '사랑해요♡ 청년센터' 크게 쓰고 인증샷 찍기" },
+    { cat: "유형 4: 일상 소소 미션", text: "상대방과 가위바위보를 해서 연속 2번 이기기 (내기 금지!)" },
+    { cat: "유형 4: 일상 소소 미션", text: "누군가 영상 촬영을 할 때 뒤에서 몰래 '꽃받침' 포즈로 출연하기" },
+    { cat: "유형 4: 일상 소소 미션", text: "물병이나 소지품을 머리 위에 올리고 5초간 버티기 성공하기" },
+    { cat: "유형 4: 일상 소소 미션", text: "상대방에게 '와, 오늘 진짜 에너지 넘치시네요!'라는 말 듣기" },
+    { cat: "유형 4: 일상 소소 미션", text: "일명 '아재 개그' 하나 던져서 누군가를 피식 웃게 만들기" },
+    { cat: "유형 4: 일상 소소 미션", text: "서피비치 주변의 쓰레기 3개 주워서 쓰레기통에 버리기" }
+];
 
-        // 카드 수동 뒤집기
-        function flipCard() {
-            card.classList.toggle('is-flipped');
-        }
+let remaining = [...missions];
+let current = [null, null];
+let revealed = [false, false];
+let phase = 'idle';
 
-        // 새 미션 뽑기
-        function drawNewMission() {
-            // 이미 뒤집혀 있다면 먼저 닫기
-            if (card.classList.contains('is-flipped')) {
-                card.classList.remove('is-flipped');
-                
-                // 카드가 완전히 닫힌 후(0.4초 뒤) 텍스트 변경
-                setTimeout(() => {
-                    setRandomMission();
-                    card.classList.add('is-flipped');
-                }, 400);
-            } else {
-                setRandomMission();
-                card.classList.add('is-flipped');
-            }
-        }
+function drawMissions() {
+    if (remaining.length < 2) {
+        // 미션 다 소진되면 초기화
+        remaining = [...missions];
+    }
 
-        function setRandomMission() {
-            const randomIndex = Math.floor(Math.random() * missions.length);
-            mCat.innerText = missions[randomIndex].cat;
-            mText.innerText = missions[randomIndex].text;
-        }
-    </script>
+    phase = 'picking';
+    revealed = [false, false];
+
+    const shuffled = [...remaining].sort(() => Math.random() - 0.5);
+    current[0] = shuffled[0];
+    current[1] = shuffled[1];
+
+    // 카드 2장 UI 렌더
+    document.getElementById('cardArea').innerHTML = `
+        <div class="cards-row" id="cardsRow">
+            <div class="card-wrap">
+                <div class="card-scene" id="scene0" onclick="revealCard(0)">
+                    <div class="card-inner" id="inner0">
+                        <div class="card-face card-back">
+                            <span class="card-back-emoji">🎴</span>
+                            <p class="card-back-label">카드 1</p>
+                        </div>
+                        <div class="card-face card-front" id="front0">
+                            <span class="mission-cat">${current[0].cat}</span>
+                            <p class="mission-text-card">${current[0].text}</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="pick-btn" id="pick0" onclick="selectMission(0)">✅ 이 미션!</button>
+            </div>
+            <div class="card-wrap">
+                <div class="card-scene" id="scene1" onclick="revealCard(1)">
+                    <div class="card-inner" id="inner1">
+                        <div class="card-face card-back">
+                            <span class="card-back-emoji">🎴</span>
+                            <p class="card-back-label">카드 2</p>
+                        </div>
+                        <div class="card-face card-front" id="front1">
+                            <span class="mission-cat">${current[1].cat}</span>
+                            <p class="mission-text-card">${current[1].text}</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="pick-btn" id="pick1" onclick="selectMission(1)">✅ 이 미션!</button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('drawBtn').disabled = true;
+    setGuide('카드를 클릭해서 미션을 확인하세요!', true);
+}
+
+function revealCard(idx) {
+    if (phase !== 'picking' || revealed[idx]) return;
+    revealed[idx] = true;
+    document.getElementById('inner' + idx).classList.add('flipped');
+    document.getElementById('scene' + idx).style.cursor = 'default';
+
+    if (revealed[0] && revealed[1]) {
+        document.getElementById('pick0').style.display = 'inline-block';
+        document.getElementById('pick1').style.display = 'inline-block';
+        setGuide('마음에 드는 미션을 선택하세요! 👆', true);
+    } else {
+        setGuide('나머지 카드도 열어보세요!', true);
+    }
+}
+
+function selectMission(idx) {
+    const selected = current[idx];
+
+    // remaining에서 선택된 미션 제거
+    const selIdx = remaining.findIndex(m => m === selected);
+    if (selIdx > -1) remaining.splice(selIdx, 1);
+
+    phase = 'idle';
+
+    // 선택 카드만 가운데에 단독으로 보여주기
+    document.getElementById('cardArea').innerHTML = `
+        <div class="cards-single fade-in-up">
+            <div class="card-wrap">
+                <div class="card-scene solo">
+                    <div class="card-inner flipped">
+                        <div class="card-face card-back"></div>
+                        <div class="card-face card-front selected">
+                            <span class="mission-cat">${selected.cat}</span>
+                            <p class="mission-text-card">${selected.text}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('drawBtn').disabled = false;
+    document.getElementById('drawBtn').textContent = '🎲 미션 뽑기 완료!';
+}
+
+function setGuide(text, active) {
+    const g = document.getElementById('guide');
+    g.textContent = text;
+    g.className = 'guide' + (active ? ' active' : '');
+}
+</script>
 </body>
 </html>
